@@ -67,6 +67,7 @@ static const char* TOKEN_TO_STR[TOK_EOF + 1] = {
     "Plus",
     "Minus",
     "Star",
+    "StarStar",
     "Slash",
     "Eq",
     "Colon",
