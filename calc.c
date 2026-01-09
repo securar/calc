@@ -709,7 +709,10 @@ AST_Node* parse_fn_call(Parser* p) {
 AST_Node* parse_unary(Parser* p);
 
 AST_Node* parse_power(Parser* p) {
-    AST_Node* expr = parse_fn_call(p);
+    AST_Node* left = parse_fn_call(p);
+    if (left == NULL) {
+        return NULL;
+    }
 
     if (parser_check(p, TOK_STARSTAR)) {
         Token op = parser_bump(p);
@@ -717,10 +720,10 @@ AST_Node* parse_power(Parser* p) {
         if (right == NULL) {
             return NULL;
         }
-        return ast_node_bin(expr, op, right);
+        return ast_node_bin(left, op, right);
     }
 
-    return expr;
+    return left;
 }
 
 AST_Node* parse_unary(Parser* p) {
@@ -884,6 +887,13 @@ AST_Node* parse_expr(Parser* p) {
 AST_Node* parse(Parser* p) {
     AST_Node* parsed_expression = parse_expr(p);
 
+    if (parser_check(p, TOK_EQ) && parsed_expression != NULL) {
+        printf("syntax error: cannot use expression as assignment target\n");
+        diagnose(p->input, parsed_expression->span);
+        p->errors_count++;
+        return NULL;
+    }
+
     if (!parser_check(p, TOK_EOF) && p->errors_count == 0) {
         // report trailing tokens if there was no errors before
         Token first = parser_bump(p);
@@ -901,9 +911,9 @@ AST_Node* parse(Parser* p) {
         printf("syntax error: unexpected trailing tokens\n");
         diagnose(p->input, span);
         p->errors_count++;
+        return NULL;
     }
 
-    // return whatever we parsed
     return parsed_expression;
 }
 
