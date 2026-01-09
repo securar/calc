@@ -738,6 +738,9 @@ AST_Node* parse_unary(Parser* p) {
 
 AST_Node* parse_factor(Parser* p) {
     AST_Node* left = parse_unary(p);
+    if (left == NULL) {
+        return NULL;
+    }
 
     while (parser_check_two(p, TOK_STAR, TOK_SLASH)) {
         Token op = parser_bump(p);
@@ -753,6 +756,9 @@ AST_Node* parse_factor(Parser* p) {
 
 AST_Node* parse_term(Parser* p) {
     AST_Node* left = parse_factor(p);
+    if (left == NULL) {
+        return NULL;
+    }
 
     while (parser_check_two(p, TOK_PLUS, TOK_MINUS)) {
         Token op = parser_bump(p);
