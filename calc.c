@@ -1187,7 +1187,7 @@ char* format_object(Object object) {
 
     switch (object.type) {
         case OBJ_NUMBER: {
-            snprintf(buf, size, "%.16g", object.as.number);
+            snprintf(buf, size, "%.32g", object.as.number);
             return buf;
         }
         case OBJ_FN: {
@@ -1414,6 +1414,7 @@ AST_Node* handle_input(char* input, NameMap* nm) {
         .input = input,
         .input_len = strlen(input),
         .pos = 0,
+        .errors_count = 0,
     };
     TokenStream ts = ts_alloc(128);
 
@@ -1439,6 +1440,7 @@ AST_Node* handle_input(char* input, NameMap* nm) {
         .ts = ts,
         .pos = 0,
         .input = input,
+        .errors_count = 0,
     };
     AST_Node* root = parse(&parser);
     if (parser.errors_count == 0) {
