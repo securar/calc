@@ -1366,6 +1366,7 @@ Object eval(Interp* interp, AST_Node* node, size_t recursion) {
                     callee.arity,
                     node->as.fn_call.args_count
                 );
+                return ERR_OBJECT;
             }
 
             NameMap local_nm = nm_alloc(interp->nm->count + 1);
