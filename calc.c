@@ -7,6 +7,7 @@
 
 #include <readline/history.h>
 #include <readline/readline.h>
+#include <string.h>
 
 #define exit_fatal(fmt, ...)                                                   \
     do {                                                                       \
@@ -705,13 +706,16 @@ AST_Node* parse_fn_call(Parser* p) {
     return callee;
 }
 
+AST_Node* parse_unary(Parser* p);
+
 AST_Node* parse_power(Parser* p) {
     AST_Node* expr = parse_fn_call(p);
 
     if (parser_check(p, TOK_STARSTAR)) {
         Token op = parser_bump(p);
-        AST_Node* right = parse_power(p);
+        AST_Node* right = parse_unary(p);
         if (right == NULL) {
+            printf("right is NULL");
             return NULL;
         }
         return ast_node_bin(expr, op, right);
@@ -1187,7 +1191,7 @@ char* format_object(Object object) {
 
     switch (object.type) {
         case OBJ_NUMBER: {
-            snprintf(buf, size, "%.32g", object.as.number);
+            snprintf(buf, size, "%.16g", object.as.number);
             return buf;
         }
         case OBJ_FN: {
