@@ -1,15 +1,12 @@
 #include <assert.h>
-#include <bits/types/struct_itimerspec.h>
 #include <math.h>
 #include <stdbool.h>
-#include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include <readline/history.h>
 #include <readline/readline.h>
-#include <string.h>
 
 #define exit_fatal(fmt, ...)                                                   \
     do {                                                                       \
@@ -67,7 +64,6 @@ static const char* TOKEN_TO_STR[TOK_EOF + 1] = {
     "Plus",
     "Minus",
     "Star",
-    "StarStar",
     "Slash",
     "Eq",
     "Colon",
@@ -204,13 +200,6 @@ bool is_ident_start(char c) {
 bool is_ident_continue(char c) {
     return is_ident_start(c) || is_digit(c);
 }
-
-#define emit_lexer_error(lex, span, message, ...) \
-    do {                                          \
-        printf("lexical error: %s\n", (message)); \
-        diagnose(((Lexer*)lex)->input, (span));   \
-        ((Lexer*)lex)->errors_count++;            \
-    } while (0)
 
 /// Move to the next character
 char lex_bump(Lexer* lex) {
@@ -1431,7 +1420,9 @@ AST_Node* handle_input(char* input, NameMap* nm) {
         ts_push(&ts, tok);
 
         if (tok.type == TOK_UNKNOWN) {
-            emit_lexer_error(&lex, tok.span, "unknown token");
+            printf("lexical error: unknown token\n");
+            diagnose(lex.input, tok.span);
+            lex.errors_count++;
         }
         else if (tok.type == TOK_EOF) {
             break;
