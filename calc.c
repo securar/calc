@@ -25,7 +25,7 @@
     } while (0)
 
 /// Max amount of parameters or arguments a function
-/// declaration or function call can have
+/// definition or function call can have
 const size_t FN_MAX_PARAMS = 32;
 
 const size_t RECURSION_LIMIT = 256;
