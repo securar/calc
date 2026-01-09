@@ -715,7 +715,6 @@ AST_Node* parse_power(Parser* p) {
         Token op = parser_bump(p);
         AST_Node* right = parse_unary(p);
         if (right == NULL) {
-            printf("right is NULL");
             return NULL;
         }
         return ast_node_bin(expr, op, right);
