@@ -22,7 +22,7 @@ And you can group expressions into parentheses:
 (2 - 3 / 12 * (-2)) + (13 * 12**-5 / 10)
 ```
 
-Also you can very easily define variables, by simply assigning a value to then:
+Also you can very easily define variables, by simply assigning a value to them:
 ```
 my_var = 3.14
 ```
